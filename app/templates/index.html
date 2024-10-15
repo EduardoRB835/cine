@@ -21,18 +21,22 @@
         }
 
         header {
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo del header */
+            background: linear-gradient(45deg, #e74c3c, #000428); /* Degradado en el header */
             padding: 20px;
-            border-bottom: 3px solid #e74c3c; /* Borde inferior */
-            position: sticky; /* Hace que el header se mantenga en la parte superior al hacer scroll */
-            top: 0; /* Posición superior */
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            border-bottom: 3px solid #e74c3c;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para dar profundidad */
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* Sombra para el título */
+            font-size: 3em;
+            color: #fff;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.8); /* Más sombra para el título */
         }
 
         .movie-container {
@@ -122,14 +126,27 @@
         footer {
             margin-top: 30px; /* Espacio encima del footer */
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7); /* Fondo del footer */
+            background: linear-gradient(45deg, #000428, #004e92); /* Degradado en el footer */
             border-top: 3px solid #e74c3c; /* Borde superior */
+            text-align: center;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5); /* Sombra superior */
             position: relative; /* Asegura que el footer esté en el flujo del documento */
         }
 
         footer p {
             margin: 0; /* Elimina margen por defecto */
-            font-size: 1em; /* Tamaño de fuente para el texto del footer */
+            font-size: 1.1em; /* Tamaño de fuente para el texto del footer */
+            color: #ccc; /* Color gris claro para el texto */
+        }
+
+        footer p a {
+            color: #e74c3c; /* Color de los enlaces en el footer */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer p a:hover {
+            color: #fff; /* Color del enlace al pasar el mouse */
         }
 
         @media (max-width: 768px) {
@@ -196,12 +213,12 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Cine de Terror. Todos los derechos reservados.</p>
+        <p>&copy; 2024 Cine de Terror. Todos los derechos reservados. <a href="#">Política de privacidad</a></p>
     </footer>
 
     <script>
         function selectMovie(movieId) {
-            document.getElementById(movieId).checked = true; // Selecciona el radio correspondiente
+            document.getElementById(movieId).checked = true;
         }
     </script>
 </body>
