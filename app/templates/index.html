@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR para Cine de Terror</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #000428, #004e92); /* Fondo degradado */
+            color: #fff; /* Color del texto */
+            text-align: center;
+            padding: 20px;
+            animation: fadeIn 1s; /* Animación de entrada */
+            margin: 0; /* Elimina márgenes por defecto */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo del header */
+            padding: 20px;
+            border-bottom: 3px solid #e74c3c; /* Borde inferior */
+            position: sticky; /* Hace que el header se mantenga en la parte superior al hacer scroll */
+            top: 0; /* Posición superior */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* Sombra para el título */
+        }
+
+        .movie-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centra el contenido en dispositivos pequeños */
+            margin-bottom: 20px; /* Espacio debajo del contenedor de películas */
+        }
+
+        .movie {
+            text-align: center;
+            margin: 10px; /* Reduce el margen para pantallas pequeñas */
+            transition: transform 0.2s, box-shadow 0.3s; /* Transiciones suaves */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Borde alrededor de cada película */
+            border-radius: 15px;
+            padding: 10px; /* Espaciado interno */
+            background: rgba(0, 0, 0, 0.8); /* Fondo más oscuro y semitransparente */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Sombra para dar profundidad */
+            position: relative; /* Para el posicionamiento del radio */
+            width: calc(33% - 20px); /* Ajusta el ancho de la película en pantallas grandes */
+            max-width: 220px; /* Limita el ancho máximo de cada película */
+        }
+
+        img {
+            width: 100%; /* Hace que la imagen sea responsiva */
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.2s; /* Transición para la imagen */
+            cursor: pointer; /* Cambia el cursor al pasar sobre la imagen */
+        }
+
+        label {
+            display: block; /* Hace que el label ocupe toda la línea */
+            margin-top: 10px; /* Espaciado entre la imagen y el texto */
+            font-weight: bold; /* Estilo para el nombre de la película */
+            font-size: 1.2em; /* Tamaño de fuente más grande */
+        }
+
+        .movie:hover {
+            transform: translateY(-10px); /* Eleva la imagen al pasar el mouse */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7); /* Sombra más intensa al pasar el mouse */
+        }
+
+        img:hover {
+            transform: scale(1.05); /* Aumenta el tamaño de la imagen al pasar el mouse */
+        }
+
+        select, button {
+            margin-top: 10px;
+            padding: 10px; /* Espaciado interno */
+            font-size: 1em; /* Tamaño de fuente */
+            border: none;
+            border-radius: 5px;
+            background-color: #e74c3c; /* Color de fondo del botón */
+            color: #fff; /* Color del texto del botón */
+            cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+            transition: background-color 0.3s; /* Transición suave para el fondo */
+            width: 100%; /* Hace que el botón ocupe todo el ancho disponible */
+            max-width: 300px; /* Limita el ancho máximo del botón */
+        }
+
+        button:hover {
+            background-color: #c0392b; /* Color de fondo del botón al pasar el mouse */
+        }
+
+        input[type="radio"] {
+            display: none; /* Oculta el radio */
+        }
+
+        /* Estilo para el radio seleccionado */
+        input[type="radio"]:checked + label {
+            color: #e74c3c; /* Cambia el color de la etiqueta */
+        }
+
+        /* Estilo para la bolita roja */
+        .movie input[type="radio"]:checked + label::before {
+            content: "";
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 3px solid #e74c3c; /* Color de la bolita */
+            border-radius: 50%; /* Forma circular */
+            margin-right: 10px; /* Espacio entre la bolita y el texto */
+            vertical-align: middle; /* Alineación vertical */
+        }
+
+        footer {
+            margin-top: 30px; /* Espacio encima del footer */
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo del footer */
+            border-top: 3px solid #e74c3c; /* Borde superior */
+            position: relative; /* Asegura que el footer esté en el flujo del documento */
+        }
+
+        footer p {
+            margin: 0; /* Elimina margen por defecto */
+            font-size: 1em; /* Tamaño de fuente para el texto del footer */
+        }
+
+        @media (max-width: 768px) {
+            .movie {
+                width: calc(50% - 20px); /* Dos películas por fila en tabletas */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em; /* Reduce el tamaño de la fuente del título en móviles */
+            }
+
+            .movie {
+                width: 100%; /* Una película por fila en móviles */
+            }
+
+            label {
+                font-size: 1em; /* Tamaño de fuente más pequeño para etiquetas en móviles */
+            }
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  
+    <header>
+        <h1>Generador de QR para Cine de Terror</h1>
+    </header>
+
+    <main>
+        <h2>Obtén tus entradas aquí 7A EVND</h2>
+
+        <form action="/select_time" method="POST">
+            <div class="movie-container">
+                <div class="movie">
+                    <img src="../static/images/sustancia.webp" alt="Las Sustancias" onclick="selectMovie('movie1')">
+                    <input type="radio" id="movie1" name="movie" value="La Sustancia" required>
+                    <label for="movie1">La Sustancia</label>
+                </div>
+                <div class="movie">
+                    <img src="../static/images/Opcion1.jpg" alt="Película 2" onclick="selectMovie('movie2')">
+                    <input type="radio" id="movie2" name="movie" value="por definir" required>
+                    <label for="movie2">Por definir</label>
+                </div>
+                <div class="movie">
+                    <img src="../static/images/opcion2.webp" alt="Película 3" onclick="selectMovie('movie3')">
+                    <input type="radio" id="movie3" name="movie" value="por definir1" required>
+                    <label for="movie3">Por definir</label>
+                </div>
+            </div>
+
+            <br>
+            <button type="submit">Seleccionar Función</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Cine de Terror. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function selectMovie(movieId) {
+            document.getElementById(movieId).checked = true; // Selecciona el radio correspondiente
+        }
+    </script>
+</body>
+</html>
