@@ -6,7 +6,7 @@ import uuid  # Para generar nombres de archivos únicos
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necesario para usar flash messages
 
-MAX_QR_CODES = 5
+MAX_QR_CODES = 50
 
 # Información de las películas
 movies_info = {
